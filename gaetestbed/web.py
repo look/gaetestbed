@@ -61,15 +61,13 @@ class WebTestCase(BaseTestCase):
         error = 'Response did not redirect (status code was %i).' % response.status_int
         self.assertTrue(response.status_int in (301, 302), error)
         if to is not None:
-            if to.startswith("http"):
-                expected_redirect = to
-            else:
-                expected_redirect = 'http://localhost%s' % to
+            if not to.startswith("http"):
+                to = 'http://localhost%s' % to
             
             error = 'Response redirected, but went to %s instead of %s' % (
-                response.location, expected_redirect
+                response.location, to
             )
-            self.assertEqual(response.location, expected_redirect, error)
+            self.assertEqual(response.location, to, error)
     
     def assertOK(self, response):
         """
